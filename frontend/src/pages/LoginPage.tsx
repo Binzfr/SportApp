@@ -31,7 +31,7 @@ export default function LoginPage() {
     onSuccess: (res) => {
       localStorage.setItem('authToken', res.data.token);
       toast({ status: 'success', title: 'Connecté !' });
-      navigate('/seances');
+      navigate('/dashboard');
     },
     onError: () => {
       toast({ status: 'error', title: 'Échec de la connexion' });
