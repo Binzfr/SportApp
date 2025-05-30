@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+SUPABASE_JDBC_URL=jdbc:postgresql://<host>:5432/<db>
+SUPABASE_DB_USER=<user>
+SUPABASE_DB_PASSWORD=<password>
+YOUTUBE_API_KEY=<your_key>
