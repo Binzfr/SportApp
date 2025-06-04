@@ -1,6 +1,7 @@
 package com.melih.sportapp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "users")
@@ -10,13 +11,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Email
     private String email;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 6, message = "Le mot de passe doit faire au moins 6 caractères")
     private String password;
 
     // Getters and setters

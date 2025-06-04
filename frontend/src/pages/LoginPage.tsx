@@ -1,5 +1,4 @@
 // src/pages/LoginPage.tsx
-import React from 'react';
 import {
   Box,
   Button,
@@ -91,7 +90,7 @@ export default function LoginPage() {
                 borderRadius="lg"
                 width="full"
                 size="lg"
-                isLoading={mutation.isLoading}
+                isLoading={mutation.isPending}
             >
               Connexion
             </Button>

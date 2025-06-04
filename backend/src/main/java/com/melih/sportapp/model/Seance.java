@@ -23,6 +23,9 @@ public class Seance {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private String frequencyDay; // ex: "Thursday"
+    private Integer frequencyMonths; // ex: 5
+
     // Getters et setters
     public Long getId() {
         return id;
@@ -62,5 +65,21 @@ public class Seance {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getFrequencyDay() {
+        return frequencyDay;
+    }
+
+    public void setFrequencyDay(String frequencyDay) {
+        this.frequencyDay = frequencyDay;
+    }
+
+    public Integer getFrequencyMonths() {
+        return frequencyMonths;
+    }
+
+    public void setFrequencyMonths(Integer frequencyMonths) {
+        this.frequencyMonths = frequencyMonths;
     }
 }

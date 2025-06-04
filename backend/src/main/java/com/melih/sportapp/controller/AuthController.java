@@ -3,7 +3,11 @@ package com.melih.sportapp.controller;
 import com.melih.sportapp.model.User;
 import com.melih.sportapp.repository.UserRepository;
 import com.melih.sportapp.security.JwtUtil;
+import com.melih.sportapp.security.SimpleRateLimiter;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,27 +26,37 @@ public class AuthController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Autowired
+    private SimpleRateLimiter rateLimiter;
+
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public ResponseEntity<?> register(@Valid @RequestBody User user, @RequestHeader(value = "X-Forwarded-For", required = false) String ip) {
+        String clientIp = ip != null ? ip : "unknown";
+        if (!rateLimiter.allowRegister(clientIp)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Trop de tentatives d'inscription, réessayez plus tard.");
+        }
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return "Username already exists";
+            return ResponseEntity.badRequest().body("Username already exists");
         }
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return "Email already exists";
+            return ResponseEntity.badRequest().body("Email already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        return "User registered successfully";
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> loginData) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData, @RequestHeader(value = "X-Forwarded-For", required = false) String ip) {
+        String clientIp = ip != null ? ip : "unknown";
+        if (!rateLimiter.allowLogin(clientIp)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Trop de tentatives de connexion, réessayez plus tard.");
+        }
         Optional<User> userOpt = userRepository.findByUsername(loginData.get("username"));
         if (userOpt.isPresent() && passwordEncoder.matches(loginData.get("password"), userOpt.get().getPassword())) {
-            String token = jwtUtil.generateToken(userOpt.get().getUsername());
-            return Map.of("token", token);
+            String token = jwtUtil.generateToken(userOpt.get().getId(), userOpt.get().getUsername());
+            return ResponseEntity.ok(Map.of("token", token));
         }
-        throw new RuntimeException("Invalid credentials");
-
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
 }

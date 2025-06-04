@@ -39,6 +39,8 @@ public class SeanceController {
     public Seance create(@RequestBody Seance seance, @RequestParam Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
         seance.setUser(user);
+        // Si frequencyDay/frequencyMonths sont présents dans le body, ils sont déjà set
+        // Tu peux supprimer la gestion de la date unique si tu ne veux plus l'utiliser
         return repository.save(seance);
     }
 
@@ -116,8 +118,9 @@ public class SeanceController {
             @RequestBody Seance updatedSeance) {
         return repository.findById(seanceId)
                 .map(seance -> {
-                    seance.setDate(updatedSeance.getDate());
                     seance.setDescription(updatedSeance.getDescription());
+                    seance.setFrequencyDay(updatedSeance.getFrequencyDay());
+                    seance.setFrequencyMonths(updatedSeance.getFrequencyMonths());
                     repository.save(seance);
                     return ResponseEntity.ok(seance);
                 })

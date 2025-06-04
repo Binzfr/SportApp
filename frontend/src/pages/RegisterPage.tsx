@@ -1,5 +1,4 @@
 // src/pages/RegisterPage.tsx
-import React from 'react';
 import {
   Box,
   Button,
@@ -129,7 +128,7 @@ export default function RegisterPage() {
               borderRadius="lg"
               w="full"
               size="lg"
-              isLoading={mutation.isLoading}
+              isLoading={mutation.isPending}
             >
               S'inscrire
             </Button>
