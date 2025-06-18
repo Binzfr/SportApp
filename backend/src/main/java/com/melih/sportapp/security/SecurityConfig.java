@@ -48,7 +48,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // Allow your frontend origins
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://your-frontend-domain.com"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://sport-app-exkh.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
