@@ -31,5 +31,6 @@
     "react-hook-form": "^7.56.4",
     "react-player": "^2.16.0",
     "react-router-dom": "^6.30.1"
-  }
+  },
+  "homepage": "https://sport-app-exkh.vercel.app"
 }
